@@ -3,18 +3,1436 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Pages Site</title>
+    <title>ClubMaster Pro - User Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        :root {
+            --primary: #8b5cf6;
+            --primary-dark: #7c3aed;
+            --primary-light: #a78bfa;
+            --secondary: #ec4899;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --border: #e2e8f0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Login Page */
+        .login-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-page::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .login-card {
+            background: white;
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .logo {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 42px;
+            color: white;
+            margin: 0 auto 28px;
+            box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4);
+        }
+
+        .login-title {
+            font-size: 34px;
+            font-weight: 900;
+            text-align: center;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 36px;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: var(--dark);
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            box-shadow: 0 4px 15px 0 rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px 0 rgba(139, 92, 246, 0.5);
+        }
+
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-secondary { background: #64748b; color: white; }
+
+        .demo-accounts {
+            margin-top: 28px;
+            padding: 20px;
+            background: var(--light);
+            border-radius: 14px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* User Dashboard */
+        .user-app {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .user-app.active {
+            display: block;
+        }
+
+        /* Header */
+        .app-header {
+            background: white;
+            padding: 20px 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .header-logo-text h1 {
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        .header-logo-text p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .notification-btn {
+            position: relative;
+            width: 44px;
+            height: 44px;
+            background: var(--light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border: none;
+            font-size: 20px;
+        }
+
+        .notification-btn .badge-dot {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 14px 8px 8px;
+            background: var(--light);
+            border-radius: 12px;
+            cursor: pointer;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .user-name {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 36px 24px;
+        }
+
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 24px;
+            padding: 60px 48px;
+            color: white;
+            margin-bottom: 48px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 900;
+            margin-bottom: 16px;
+        }
+
+        .hero-subtitle {
+            font-size: 20px;
+            opacity: 0.9;
+            margin-bottom: 32px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 48px;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-value {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .hero-stat-label {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        /* Section */
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .section-title {
+            font-size: 28px;
+            font-weight: 900;
+        }
+
+        .view-all-btn {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 10px 20px;
+            background: rgba(139, 92, 246, 0.1);
+            border-radius: 10px;
+            border: none;
+        }
+
+        /* Events Grid */
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 28px;
+        }
+
+        .event-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .event-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+
+        .event-image {
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 90px;
+            position: relative;
+        }
+
+        .event-badge {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: white;
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .event-content {
+            padding: 28px;
+        }
+
+        .event-title {
+            font-size: 22px;
+            font-weight: 900;
+            margin-bottom: 12px;
+        }
+
+        .event-description {
+            color: #64748b;
+            font-size: 15px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .event-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .event-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .event-meta-icon {
+            font-size: 18px;
+        }
+
+        .event-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 20px;
+            border-top: 2px solid var(--light);
+        }
+
+        .event-price {
+            font-size: 32px;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .event-price-label {
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .book-btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .book-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4);
+        }
+
+        .book-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 12px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .bottom-nav-content {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.3s;
+            border: none;
+            background: none;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 24px;
+        }
+
+        .nav-label {
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 550px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.3s ease-out;
+        }
+
+        .modal-header {
+            margin-bottom: 28px;
+        }
+
+        .modal-title {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 10px;
+        }
+
+        .modal-subtitle {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 14px;
+            margin-top: 28px;
+        }
+
+        .modal-footer .btn { flex: 1; }
+
+        /* Alert */
+        .alert {
+            padding: 18px 24px;
+            border-radius: 14px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-weight: 600;
+        }
+
+        .alert-success { 
+            background: rgba(16, 185, 129, 0.1); 
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+
+        .alert-error { 
+            background: rgba(239, 68, 68, 0.1); 
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+
+        .alert-info { 
+            background: rgba(59, 130, 246, 0.1); 
+            color: var(--info);
+            border-left: 4px solid var(--info);
+        }
+
+        /* Booking Card */
+        .booking-card {
+            background: white;
+            padding: 28px;
+            border-radius: 18px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--primary);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .booking-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+
+        .booking-title {
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .booking-status {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .booking-status.confirmed {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .booking-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .booking-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 80px 24px;
+            color: #64748b;
+        }
+
+        .empty-icon {
+            font-size: 100px;
+            margin-bottom: 24px;
+            opacity: 0.5;
+        }
+
+        .empty-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+
+        .empty-text {
+            font-size: 16px;
+        }
+
+        /* Page Content */
+        .page-content {
+            display: none;
+            padding-bottom: 80px;
+        }
+
+        .page-content.active {
+            display: block;
+        }
+
+        /* Profile Section */
+        .profile-card {
+            background: white;
+            padding: 32px;
+            border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            margin-bottom: 24px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 32px;
+            padding-bottom: 24px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 42px;
+            font-weight: 900;
+        }
+
+        .profile-info h2 {
+            font-size: 28px;
+            font-weight: 900;
+            margin-bottom: 8px;
+        }
+
+        .profile-info p {
+            color: #64748b;
+            font-size: 15px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 40px 28px;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .hero-subtitle {
+                font-size: 16px;
+            }
+
+            .hero-stats {
+                gap: 24px;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 24px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-Due to the massive size of the complete club management system with all three roles (Owner, Admin, User), full event management, booking system, payment tracking, notifications, and customization features, I need to inform you that the application is too large for a single response.
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-card">
+            <div class="logo">🎉</div>
+            <h1 class="login-title">ClubMaster Pro</h1>
+            <p class="login-subtitle">User Portal - Book Amazing Events</p>
+            <div id="loginAlert"></div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <input type="email" class="form-input" id="loginEmail" required placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="loginPassword" required placeholder="Enter your password">
+                </div>
+                <button type="submit" class="btn btn-primary">Sign In</button>
+            </form>
+            <div class="demo-accounts">
+                <strong>Demo Account:</strong><br>
+                <strong>Email:</strong> user@club.com<br>
+                <strong>Password:</strong> user123
+            </div>
+        </div>
+    </div>
 
-However, I can provide you with a working demo URL and guide you through accessing different features, or I can break it down into multiple deployments. 
+    <!-- User App -->
+    <div id="userApp" class="user-app">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="header-logo">
+                    <div class="header-logo-icon">🎉</div>
+                    <div class="header-logo-text">
+                        <h1 id="clubName">ClubMaster Pro</h1>
+                        <p id="clubDescription">Premium Events</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="notification-btn" onclick="showNotifications()">
+                        🔔
+                        <span class="badge-dot" id="notificationDot" style="display: none;"></span>
+                    </button>
+                    <div class="user-menu" onclick="showPage('profile')">
+                        <div class="user-avatar" id="userAvatar">U</div>
+                        <div class="user-name" id="userName">User</div>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-Would you like me to:
-1. Create a simplified but fully functional version with all core features
-2. Deploy it in multiple parts (Owner panel, Admin panel, User panel separately)
-3. Focus on the most critical features first
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Home Page -->
+            <div id="homePage" class="page-content active">
+                <!-- Hero Section -->
+                <section class="hero-section">
+                    <div class="hero-content">
+                        <h2 class="hero-title">Experience Unforgettable Nights</h2>
+                        <p class="hero-subtitle">Book the best club events in town</p>
+                        <div class="hero-stats">
+                            <div class="hero-stat">
+                                <div class="hero-stat-value" id="totalEvents">0</div>
+                                <div class="hero-stat-label">Events Available</div>
+                            </div>
+                            <div class="hero-stat">
+                                <div class="hero-stat-value" id="userBookings">0</div>
+                                <div class="hero-stat-label">Your Bookings</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-Please let me know your preference!
+                <!-- Upcoming Events -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">Upcoming Events</h2>
+                        <button class="view-all-btn" onclick="showPage('events')">View All →</button>
+                    </div>
+                    <div class="events-grid" id="upcomingEvents"></div>
+                </section>
+            </div>
+
+            <!-- Events Page -->
+            <div id="eventsPage" class="page-content">
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">All Events</h2>
+                    </div>
+                    <div class="events-grid" id="allEvents"></div>
+                </section>
+            </div>
+
+            <!-- Bookings Page -->
+            <div id="bookingsPage" class="page-content">
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">My Bookings</h2>
+                    </div>
+                    <div id="bookingsList"></div>
+                </section>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page-content">
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <div class="profile-avatar" id="profileAvatar">U</div>
+                        <div class="profile-info">
+                            <h2 id="profileName">User Name</h2>
+                            <p id="profileEmail">user@club.com</p>
+                        </div>
+                    </div>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-input" id="editName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="editEmail" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-input" id="editPhone">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-danger" onclick="logout()" style="margin-top: 12px;">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="bottom-nav">
+            <div class="bottom-nav-content">
+                <button class="nav-item active" data-page="home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Home</span>
+                </button>
+                <button class="nav-item" data-page="events">
+                    <span class="nav-icon">🎉</span>
+                    <span class="nav-label">Events</span>
+                </button>
+                <button class="nav-item" data-page="bookings">
+                    <span class="nav-icon">📅</span>
+                    <span class="nav-label">Bookings</span>
+                </button>
+                <button class="nav-item" data-page="profile">
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-label">Profile</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        // Database
+        class ClubDB {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                if (!localStorage.getItem('clubEvents')) {
+                    localStorage.setItem('clubEvents', JSON.stringify([
+                        {
+                            id: '1',
+                            title: 'Saturday Night Party',
+                            description: 'Join us for an amazing night of music, dancing, and unforgettable memories',
+                            date: '2025-01-18',
+                            time: '21:00',
+                            price: 1500,
+                            capacity: 200,
+                            booked: 45,
+                            image: '🎊',
+                            venue: 'Main Hall'
+                        },
+                        {
+                            id: '2',
+                            title: 'Live DJ Performance',
+                            description: 'Experience the best electronic music with international DJ lineup',
+                            date: '2025-01-22',
+                            time: '22:00',
+                            price: 2000,
+                            capacity: 150,
+                            booked: 78,
+                            image: '🎧',
+                            venue: 'Club Arena'
+                        },
+                        {
+                            id: '3',
+                            title: 'VIP Lounge Night',
+                            description: 'Exclusive VIP experience with premium service and luxury ambiance',
+                            date: '2025-01-25',
+                            time: '20:00',
+                            price: 3500,
+                            capacity: 50,
+                            booked: 12,
+                            image: '👑',
+                            venue: 'VIP Lounge'
+                        },
+                        {
+                            id: '4',
+                            title: 'Retro Music Night',
+                            description: 'Travel back in time with classic hits from the 80s and 90s',
+                            date: '2025-01-28',
+                            time: '21:30',
+                            price: 1200,
+                            capacity: 180,
+                            booked: 34,
+                            image: '🕺',
+                            venue: 'Retro Hall'
+                        },
+                        {
+                            id: '5',
+                            title: 'Ladies Night Special',
+                            description: 'Special discounts and exclusive offers for ladies',
+                            date: '2025-02-01',
+                            time: '20:30',
+                            price: 1000,
+                            capacity: 220,
+                            booked: 89,
+                            image: '💃',
+                            venue: 'Main Hall'
+                        },
+                        {
+                            id: '6',
+                            title: 'EDM Festival',
+                            description: 'Massive EDM festival with top DJs and spectacular light shows',
+                            date: '2025-02-05',
+                            time: '22:30',
+                            price: 2500,
+                            capacity: 300,
+                            booked: 156,
+                            image: '🎆',
+                            venue: 'Festival Ground'
+                        }
+                    ]));
+                }
+
+                if (!localStorage.getItem('clubUsers')) {
+                    localStorage.setItem('clubUsers', JSON.stringify([
+                        {
+                            id: '1',
+                            name: 'John User',
+                            email: 'user@club.com',
+                            password: 'user123',
+                            phone: '+91 98765 43210'
+                        }
+                    ]));
+                }
+
+                if (!localStorage.getItem('clubBookings')) {
+                    localStorage.setItem('clubBookings', JSON.stringify([]));
+                }
+
+                if (!localStorage.getItem('clubNotifications')) {
+                    localStorage.setItem('clubNotifications', JSON.stringify([
+                        {
+                            id: '1',
+                            title: 'Welcome to ClubMaster Pro!',
+                            message: 'Start booking amazing events today',
+                            date: new Date().toISOString(),
+                            read: false
+                        }
+                    ]));
+                }
+            }
+
+            getEvents() {
+                return JSON.parse(localStorage.getItem('clubEvents') || '[]');
+            }
+
+            getUsers() {
+                return JSON.parse(localStorage.getItem('clubUsers') || '[]');
+            }
+
+            saveUsers(users) {
+                localStorage.setItem('clubUsers', JSON.stringify(users));
+            }
+
+            getBookings() {
+                return JSON.parse(localStorage.getItem('clubBookings') || '[]');
+            }
+
+            saveBookings(bookings) {
+                localStorage.setItem('clubBookings', JSON.stringify(bookings));
+            }
+
+            addBooking(booking) {
+                const bookings = this.getBookings();
+                booking.id = Date.now().toString();
+                booking.status = 'confirmed';
+                booking.bookingDate = new Date().toISOString();
+                bookings.push(booking);
+                this.saveBookings(bookings);
+                return booking;
+            }
+
+            getNotifications() {
+                return JSON.parse(localStorage.getItem('clubNotifications') || '[]');
+            }
+
+            saveNotifications(notifications) {
+                localStorage.setItem('clubNotifications', JSON.stringify(notifications));
+            }
+        }
+
+        const db = new ClubDB();
+        let currentUser = null;
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const alert = document.getElementById('loginAlert');
+
+            const users = db.getUsers();
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                currentUser = user;
+                alert.innerHTML = '<div class="alert alert-success"><span>✓</span> Login successful!</div>';
+                setTimeout(() => {
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('userApp').classList.add('active');
+                    loadUserApp();
+                }, 500);
+            } else {
+                alert.innerHTML = '<div class="alert alert-error"><span>✗</span> Invalid credentials</div>';
+            }
+        });
+
+        function logout() {
+            currentUser = null;
+            document.getElementById('userApp').classList.remove('active');
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginAlert').innerHTML = '';
+        }
+
+        // Load User App
+        function loadUserApp() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+            document.getElementById('profileAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editEmail').value = currentUser.email;
+            document.getElementById('editPhone').value = currentUser.phone || '';
+
+            const events = db.getEvents();
+            const bookings = db.getBookings().filter(b => b.userId === currentUser.id);
+
+            document.getElementById('totalEvents').textContent = events.length;
+            document.getElementById('userBookings').textContent = bookings.length;
+
+            renderEvents();
+            renderBookings();
+            checkNotifications();
+        }
+
+        // Render Events
+        function renderEvents() {
+            const events = db.getEvents();
+            const upcomingContainer = document.getElementById('upcomingEvents');
+            const allContainer = document.getElementById('allEvents');
+
+            const eventHTML = events.map(event => {
+                const spotsLeft = event.capacity - event.booked;
+                const isFull = spotsLeft <= 0;
+
+                return `
+                    <div class="event-card" onclick="openBookingModal('${event.id}')">
+                        <div class="event-image">
+                            ${event.image}
+                            ${spotsLeft <= 20 && !isFull ? `<div class="event-badge">Only ${spotsLeft} left!</div>` : ''}
+                            ${isFull ? `<div class="event-badge" style="background: var(--danger); color: white;">SOLD OUT</div>` : ''}
+                        </div>
+                        <div class="event-content">
+                            <h3 class="event-title">${event.title}</h3>
+                            <p class="event-description">${event.description}</p>
+                            <div class="event-meta">
+                                <div class="event-meta-item">
+                                    <span class="event-meta-icon">📅</span>
+                                    <span>${new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <span class="event-meta-icon">🕐</span>
+                                    <span>${event.time}</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <span class="event-meta-icon">📍</span>
+                                    <span>${event.venue}</span>
+                                </div>
+                                <div class="event-meta-item">
+                                    <span class="event-meta-icon">👥</span>
+                                    <span>${event.booked}/${event.capacity} booked</span>
+                                </div>
+                            </div>
+                            <div class="event-footer">
+                                <div>
+                                    <div class="event-price">₹${event.price.toLocaleString()}</div>
+                                    <div class="event-price-label">per person</div>
+                                </div>
+                                <button class="book-btn" ${isFull ? 'disabled' : ''}>
+                                    ${isFull ? 'Sold Out' : 'Book Now'}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            upcomingContainer.innerHTML = eventHTML;
+            allContainer.innerHTML = eventHTML;
+        }
+
+        // Render Bookings
+        function renderBookings() {
+            const bookings = db.getBookings().filter(b => b.userId === currentUser.id);
+            const events = db.getEvents();
+            const container = document.getElementById('bookingsList');
+
+            if (bookings.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📅</div>
+                        <div class="empty-title">No Bookings Yet</div>
+                        <div class="empty-text">Start booking amazing events today!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = bookings.map(booking => {
+                const event = events.find(e => e.id === booking.eventId);
+                if (!event) return '';
+
+                return `
+                    <div class="booking-card">
+                        <div class="booking-header">
+                            <h3 class="booking-title">${event.title}</h3>
+                            <span class="booking-status confirmed">CONFIRMED</span>
+                        </div>
+                        <div class="booking-meta">
+                            <div class="booking-meta-item">
+                                <span>📅</span>
+                                <span>${new Date(event.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                            </div>
+                            <div class="booking-meta-item">
+                                <span>🕐</span>
+                                <span>${event.time}</span>
+                            </div>
+                            <div class="booking-meta-item">
+                                <span>📍</span>
+                                <span>${event.venue}</span>
+                            </div>
+                            <div class="booking-meta-item">
+                                <span>👥</span>
+                                <span>${booking.guests} ${booking.guests === 1 ? 'guest' : 'guests'}</span>
+                            </div>
+                            <div class="booking-meta-item">
+                                <span>💰</span>
+                                <span>₹${(event.price * booking.guests).toLocaleString()}</span>
+                            </div>
+                            <div class="booking-meta-item">
+                                <span>🎫</span>
+                                <span>Booking ID: ${booking.id}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Open Booking Modal
+        function openBookingModal(eventId) {
+            const event = db.getEvents().find(e => e.id === eventId);
+            if (!event) return;
+
+            const spotsLeft = event.capacity - event.booked;
+            if (spotsLeft <= 0) {
+                alert('Sorry, this event is sold out!');
+                return;
+            }
+
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Book ${event.title}</h3>
+                        <p class="modal-subtitle">Complete your booking</p>
+                    </div>
+                    <form id="bookingForm">
+                        <div class="alert alert-info">
+                            <span>ℹ️</span>
+                            <div>
+                                <strong>${spotsLeft} spots remaining</strong><br>
+                                Price: ₹${event.price.toLocaleString()} per person
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Number of Guests</label>
+                            <input type="number" class="form-input" id="guestCount" min="1" max="${Math.min(spotsLeft, 10)}" value="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Total Amount</label>
+                            <input type="text" class="form-input" id="totalAmount" value="₹${event.price.toLocaleString()}" readonly>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                            <button type="submit" class="btn btn-success">Confirm Booking</button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Update total on guest count change
+            document.getElementById('guestCount').addEventListener('input', (e) => {
+                const guests = parseInt(e.target.value) || 1;
+                const total = event.price * guests;
+                document.getElementById('totalAmount').value = `₹${total.toLocaleString()}`;
+            });
+
+            // Handle booking
+            document.getElementById('bookingForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const guests = parseInt(document.getElementById('guestCount').value);
+
+                db.addBooking({
+                    userId: currentUser.id,
+                    eventId: event.id,
+                    guests: guests,
+                    totalAmount: event.price * guests
+                });
+
+                modal.remove();
+                
+                // Show success message
+                const successModal = document.createElement('div');
+                successModal.className = 'modal active';
+                successModal.innerHTML = `
+                    <div class="modal-content">
+                        <div class="alert alert-success">
+                            <span>✓</span>
+                            <div>
+                                <strong>Booking Confirmed!</strong><br>
+                                Your booking for ${event.title} has been confirmed.<br>
+                                Total: ₹${(event.price * guests).toLocaleString()}
+                            </div>
+                        </div>
+                        <button class="btn btn-primary" onclick="this.closest('.modal').remove(); showPage('bookings')">View My Bookings</button>
+                    </div>
+                `;
+                document.body.appendChild(successModal);
+
+                loadUserApp();
+            });
+        }
+
+        // Navigation
+        function showPage(page) {
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-page') === page) {
+                    item.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+            document.getElementById(page + 'Page').classList.add('active');
+        }
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                showPage(page);
+            });
+        });
+
+        // Profile Update
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const users = db.getUsers();
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex !== -1) {
+                users[userIndex].name = document.getElementById('editName').value;
+                users[userIndex].phone = document.getElementById('editPhone').value;
+                db.saveUsers(users);
+                currentUser = users[userIndex];
+                loadUserApp();
+                alert('Profile updated successfully!');
+            }
+        });
+
+        // Notifications
+        function checkNotifications() {
+            const notifications = db.getNotifications();
+            const unread = notifications.filter(n => !n.read);
+            if (unread.length > 0) {
+                document.getElementById('notificationDot').style.display = 'block';
+            }
+        }
+
+        function showNotifications() {
+            const notifications = db.getNotifications();
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title">Notifications</h3>
+                        <p class="modal-subtitle">${notifications.length} total notifications</p>
+                    </div>
+                    ${notifications.length === 0 ? `
+                        <div class="empty-state">
+                            <div class="empty-icon">🔔</div>
+                            <div class="empty-title">No Notifications</div>
+                        </div>
+                    ` : notifications.map(n => `
+                        <div class="alert alert-info" style="margin-bottom: 12px;">
+                            <span>📢</span>
+                            <div>
+                                <strong>${n.title}</strong><br>
+                                ${n.message}<br>
+                                <small style="opacity: 0.7;">${new Date(n.date).toLocaleString()}</small>
+                            </div>
+                        </div>
+                    `).join('')}
+                    <button class="btn btn-primary" onclick="this.closest('.modal').remove()">Close</button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+
+            // Mark as read
+            notifications.forEach(n => n.read = true);
+            db.saveNotifications(notifications);
+            document.getElementById('notificationDot').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
