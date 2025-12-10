@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ClubMaster Pro - User Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', -apple-system, sans-serif; background: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
 
         /* Maintenance Screen */
         .maintenance-screen {
@@ -89,7 +90,9 @@
             cursor: pointer;
             background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
             color: white;
+            transition: all 0.3s;
         }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3); }
         .demo-accounts {
             margin-top: 28px;
             padding: 20px;
@@ -109,6 +112,210 @@
         .alert-success { background: rgba(16, 185, 129, 0.1); color: #10b981; border-left: 4px solid #10b981; }
         .alert-error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-left: 4px solid #ef4444; }
         .alert-warning { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-left: 4px solid #f59e0b; }
+
+        /* Dashboard */
+        .dashboard { display: none; min-height: 100vh; }
+        .dashboard.active { display: block; }
+        
+        .topbar {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            padding: 40px;
+            color: white;
+            text-align: center;
+        }
+        .topbar h1 { font-size: 42px; font-weight: 900; margin-bottom: 10px; }
+        .topbar p { font-size: 18px; opacity: 0.9; }
+
+        .container { max-width: 1200px; margin: -60px auto 0; padding: 0 24px 40px; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            margin-bottom: 40px;
+        }
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .stat-icon { font-size: 50px; margin-bottom: 15px; }
+        .stat-label { font-size: 14px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+        .stat-value { font-size: 32px; font-weight: 900; color: #1e293b; }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 28px;
+            margin-bottom: 40px;
+        }
+        .event-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+        }
+        .event-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .event-header {
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .event-icon { font-size: 70px; }
+        .event-body { padding: 30px; }
+        .event-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; color: #1e293b; }
+        .event-desc { color: #64748b; margin-bottom: 20px; line-height: 1.6; }
+        .event-info { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+        .event-info-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #64748b; }
+        .event-info-icon { font-size: 18px; }
+        .event-price { font-size: 28px; font-weight: 900; color: #8b5cf6; margin-bottom: 15px; }
+        .event-capacity { 
+            background: rgba(139, 92, 246, 0.1); 
+            padding: 10px; 
+            border-radius: 10px; 
+            text-align: center; 
+            font-weight: 700; 
+            color: #8b5cf6;
+            margin-bottom: 20px;
+        }
+        .btn-book {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-book:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.4); }
+        .btn-book:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 15px 0;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            color: #64748b;
+            transition: all 0.3s;
+            border-radius: 12px;
+        }
+        .nav-item.active { color: #8b5cf6; background: rgba(139, 92, 246, 0.1); }
+        .nav-item:hover { color: #8b5cf6; }
+        .nav-icon { font-size: 24px; }
+        .nav-label { font-size: 12px; font-weight: 600; }
+
+        .page { display: none; padding-bottom: 100px; }
+        .page.active { display: block; }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 24px;
+        }
+        .card-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #1e293b; }
+
+        .booking-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            border-left: 4px solid #8b5cf6;
+        }
+        .booking-id { font-size: 12px; color: #64748b; font-weight: 700; margin-bottom: 8px; }
+        .booking-event { font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
+        .booking-details { font-size: 14px; color: #64748b; margin-bottom: 8px; }
+        .booking-amount { font-size: 20px; font-weight: 900; color: #8b5cf6; }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: white;
+            margin: 0 auto 20px;
+        }
+
+        .notif-item {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+        .notif-title { font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
+        .notif-message { font-size: 14px; color: #64748b; margin-bottom: 8px; }
+        .notif-date { font-size: 12px; color: #94a3b8; }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #64748b;
+        }
+        .empty-icon { font-size: 80px; margin-bottom: 20px; opacity: 0.5; }
+        .empty-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
+        .empty-text { font-size: 16px; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal-title { font-size: 28px; font-weight: 900; margin-bottom: 20px; }
+        .modal-footer {
+            display: flex;
+            gap: 14px;
+            margin-top: 24px;
+        }
+        .modal-footer .btn { flex: 1; }
+        .btn-secondary { background: #64748b; }
     </style>
 </head>
 <body>
@@ -119,54 +326,179 @@
         <p class="maintenance-message" id="maintenanceMessage">We're currently performing scheduled maintenance. We'll be back soon!</p>
     </div>
 
+    <!-- Login Page -->
     <div id="loginPage" class="login-page">
         <div class="login-card">
             <div class="logo">🎉</div>
             <h1 class="login-title">ClubMaster Pro</h1>
-            <p class="login-subtitle">User Portal</p>
+            <p class="login-subtitle">Welcome Back!</p>
             <div id="loginAlert"></div>
             <form id="loginForm">
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="loginEmail" required>
+                    <input type="email" class="form-input" id="loginEmail" required placeholder="Enter your email">
                 </div>
                 <div class="form-group">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="loginPassword" required>
+                    <input type="password" class="form-input" id="loginPassword" required placeholder="Enter your password">
                 </div>
                 <button type="submit" class="btn">Sign In</button>
             </form>
             <div class="demo-accounts">
-                <strong>Demo:</strong> user@club.com / user123
+                <strong>Demo Account:</strong><br>
+                Email: user@club.com<br>
+                Password: user123
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard">
+        <div class="topbar">
+            <h1>🎉 ClubMaster Pro</h1>
+            <p>Your Premium Event Experience</p>
+        </div>
+
+        <div class="container">
+            <!-- Home Page -->
+            <div id="homePage" class="page active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">🎉</div>
+                        <div class="stat-label">Total Events</div>
+                        <div class="stat-value" id="totalEvents">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📅</div>
+                        <div class="stat-label">Your Bookings</div>
+                        <div class="stat-value" id="yourBookings">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-label">Total Spent</div>
+                        <div class="stat-value" id="totalSpent">₹0</div>
+                    </div>
+                </div>
+
+                <h2 style="font-size: 28px; font-weight: 900; margin-bottom: 24px; color: #1e293b;">🔥 Upcoming Events</h2>
+                <div class="events-grid" id="eventsGrid"></div>
+            </div>
+
+            <!-- Bookings Page -->
+            <div id="bookingsPage" class="page">
+                <div class="card">
+                    <h2 class="card-title">📅 My Bookings</h2>
+                    <div id="bookingsList"></div>
+                </div>
+            </div>
+
+            <!-- Profile Page -->
+            <div id="profilePage" class="page">
+                <div class="card">
+                    <h2 class="card-title">👤 My Profile</h2>
+                    <div class="profile-avatar" id="profileAvatar">U</div>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label class="form-label">Name</label>
+                            <input type="text" class="form-input" id="profileName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email</label>
+                            <input type="email" class="form-input" id="profileEmail" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phone</label>
+                            <input type="tel" class="form-input" id="profilePhone">
+                        </div>
+                        <button type="submit" class="btn">Save Changes</button>
+                    </form>
+                    <button class="btn btn-secondary" onclick="logout()" style="margin-top: 15px;">Logout</button>
+                </div>
+            </div>
+
+            <!-- Notifications Page -->
+            <div id="notificationsPage" class="page">
+                <div class="card">
+                    <h2 class="card-title">🔔 Notifications</h2>
+                    <div id="notificationsList"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="bottom-nav">
+            <div class="nav-item active" onclick="showPage('home')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" onclick="showPage('bookings')">
+                <div class="nav-icon">📅</div>
+                <div class="nav-label">Bookings</div>
+            </div>
+            <div class="nav-item" onclick="showPage('notifications')">
+                <div class="nav-icon">🔔</div>
+                <div class="nav-label">Notifications</div>
+            </div>
+            <div class="nav-item" onclick="showPage('profile')">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Profile</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking Modal -->
+    <div id="bookingModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="modalEventTitle">Book Event</h3>
+            <div id="modalEventDetails"></div>
+            <div class="form-group">
+                <label class="form-label">Number of Guests</label>
+                <input type="number" class="form-input" id="guestCount" min="1" value="1">
+            </div>
+            <div style="font-size: 24px; font-weight: 900; color: #8b5cf6; margin: 20px 0;">
+                Total: <span id="totalAmount">₹0</span>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeBookingModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmBooking()">Confirm Booking</button>
             </div>
         </div>
     </div>
 
     <script>
         const db = {
+            get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
+            set: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
             getObj: (key) => JSON.parse(localStorage.getItem(key) || '{}')
         };
 
-        // Check maintenance mode on load
-        window.addEventListener('DOMContentLoaded', () => {
-            checkMaintenanceMode();
-        });
+        let currentUser = null;
+        let selectedEvent = null;
 
+        // Check maintenance mode
         function checkMaintenanceMode() {
             const settings = db.getObj('clubSettings');
             if (settings.maintenanceMode) {
                 document.getElementById('maintenanceMessage').textContent = settings.maintenanceMessage || "We're currently performing scheduled maintenance. We'll be back soon!";
                 document.getElementById('maintenanceScreen').classList.add('active');
                 document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('dashboard').classList.remove('active');
+                return true;
+            } else {
+                document.getElementById('maintenanceScreen').classList.remove('active');
+                return false;
             }
         }
 
+        window.addEventListener('DOMContentLoaded', () => {
+            checkMaintenanceMode();
+        });
+
+        // Login
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Check maintenance mode before login
-            const settings = db.getObj('clubSettings');
-            if (settings.maintenanceMode) {
+            if (checkMaintenanceMode()) {
                 document.getElementById('loginAlert').innerHTML = '<div class="alert alert-warning">⚠️ System is under maintenance. Please try again later.</div>';
                 return;
             }
@@ -175,17 +507,246 @@
             const pass = document.getElementById('loginPassword').value;
             
             if (email === 'user@club.com' && pass === 'user123') {
-                document.getElementById('loginAlert').innerHTML = '<div class="alert alert-success">✓ Login successful! Redirecting...</div>';
+                currentUser = { id: '1', email, name: 'Demo User', phone: '+91 9876543210' };
+                
+                // Initialize user if not exists
+                let users = db.get('clubUsers');
+                if (!users.find(u => u.email === email)) {
+                    users.push(currentUser);
+                    db.set('clubUsers', users);
+                }
+                
+                document.getElementById('loginAlert').innerHTML = '<div class="alert alert-success">✓ Login successful!</div>';
                 setTimeout(() => {
-                    alert('User portal is working! Full UI coming soon.');
+                    document.getElementById('loginPage').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    loadDashboard();
                 }, 500);
             } else {
                 document.getElementById('loginAlert').innerHTML = '<div class="alert alert-error">✗ Invalid credentials</div>';
             }
         });
 
+        function logout() {
+            currentUser = null;
+            document.getElementById('dashboard').classList.remove('active');
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginAlert').innerHTML = '';
+        }
+
+        function loadDashboard() {
+            const events = db.get('clubEvents');
+            const bookings = db.get('clubBookings');
+            const userBookings = bookings.filter(b => b.userId === currentUser.id);
+            
+            const totalSpent = userBookings.reduce((sum, b) => sum + b.totalAmount, 0);
+            
+            document.getElementById('totalEvents').textContent = events.length;
+            document.getElementById('yourBookings').textContent = userBookings.length;
+            document.getElementById('totalSpent').textContent = '₹' + totalSpent.toLocaleString();
+            
+            renderEvents();
+            renderBookings();
+            renderNotifications();
+            loadProfile();
+        }
+
+        function renderEvents() {
+            const events = db.get('clubEvents');
+            const container = document.getElementById('eventsGrid');
+            
+            if (events.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">🎉</div><div class="empty-title">No Events Available</div><div class="empty-text">Check back soon for exciting events!</div></div>';
+                return;
+            }
+
+            container.innerHTML = events.map(e => {
+                const available = e.capacity - (e.booked || 0);
+                const isSoldOut = available <= 0;
+                
+                return `
+                    <div class="event-card">
+                        <div class="event-header">
+                            <div class="event-icon">${e.image || '🎉'}</div>
+                        </div>
+                        <div class="event-body">
+                            <h3 class="event-title">${e.title}</h3>
+                            <p class="event-desc">${e.description || 'Join us for an amazing event!'}</p>
+                            <div class="event-info">
+                                <div class="event-info-item">
+                                    <span class="event-info-icon">📅</span>
+                                    <span>${new Date(e.date).toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                                </div>
+                                <div class="event-info-item">
+                                    <span class="event-info-icon">⏰</span>
+                                    <span>${e.time}</span>
+                                </div>
+                                <div class="event-info-item">
+                                    <span class="event-info-icon">📍</span>
+                                    <span>${e.venue}</span>
+                                </div>
+                            </div>
+                            <div class="event-price">₹${e.price.toLocaleString()} <span style="font-size: 14px; color: #64748b;">per person</span></div>
+                            <div class="event-capacity">
+                                ${isSoldOut ? '🔴 SOLD OUT' : `✅ ${available} spots left`}
+                            </div>
+                            <button class="btn-book" onclick="openBookingModal('${e.id}')" ${isSoldOut ? 'disabled' : ''}>
+                                ${isSoldOut ? 'Sold Out' : 'Book Now'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderBookings() {
+            const bookings = db.get('clubBookings').filter(b => b.userId === currentUser.id);
+            const events = db.get('clubEvents');
+            const container = document.getElementById('bookingsList');
+            
+            if (bookings.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">📅</div><div class="empty-title">No Bookings Yet</div><div class="empty-text">Book your first event now!</div></div>';
+                return;
+            }
+
+            container.innerHTML = bookings.map(b => {
+                const event = events.find(e => e.id === b.eventId);
+                return `
+                    <div class="booking-item">
+                        <div class="booking-id">Booking ID: #${b.id.slice(-8)}</div>
+                        <div class="booking-event">${event?.title || 'Unknown Event'}</div>
+                        <div class="booking-details">📅 ${new Date(event?.date).toLocaleDateString()} • ⏰ ${event?.time}</div>
+                        <div class="booking-details">👥 ${b.guests} Guest${b.guests > 1 ? 's' : ''} • 📍 ${event?.venue}</div>
+                        <div class="booking-amount">₹${b.totalAmount.toLocaleString()}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderNotifications() {
+            const notifs = db.get('clubNotifications');
+            const container = document.getElementById('notificationsList');
+            
+            if (notifs.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔔</div><div class="empty-title">No Notifications</div><div class="empty-text">You\'re all caught up!</div></div>';
+                return;
+            }
+
+            container.innerHTML = notifs.slice().reverse().map(n => `
+                <div class="notif-item">
+                    <div class="notif-title">${n.title}</div>
+                    <div class="notif-message">${n.message}</div>
+                    <div class="notif-date">${new Date(n.date).toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadProfile() {
+            document.getElementById('profileName').value = currentUser.name;
+            document.getElementById('profileEmail').value = currentUser.email;
+            document.getElementById('profilePhone').value = currentUser.phone || '';
+            document.getElementById('profileAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        document.getElementById('profileForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            currentUser.name = document.getElementById('profileName').value;
+            currentUser.phone = document.getElementById('profilePhone').value;
+            
+            let users = db.get('clubUsers');
+            const index = users.findIndex(u => u.id === currentUser.id);
+            if (index !== -1) {
+                users[index] = currentUser;
+                db.set('clubUsers', users);
+            }
+            
+            alert('Profile updated successfully!');
+            loadProfile();
+        });
+
+        function openBookingModal(eventId) {
+            const events = db.get('clubEvents');
+            selectedEvent = events.find(e => e.id === eventId);
+            
+            document.getElementById('modalEventTitle').textContent = selectedEvent.title;
+            document.getElementById('modalEventDetails').innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <div style="font-size: 16px; color: #64748b; margin-bottom: 10px;">
+                        📅 ${new Date(selectedEvent.date).toLocaleDateString()} • ⏰ ${selectedEvent.time}<br>
+                        📍 ${selectedEvent.venue}
+                    </div>
+                    <div style="font-size: 20px; font-weight: 700; color: #8b5cf6;">
+                        ₹${selectedEvent.price.toLocaleString()} per person
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('guestCount').value = 1;
+            document.getElementById('guestCount').max = selectedEvent.capacity - (selectedEvent.booked || 0);
+            updateTotalAmount();
+            
+            document.getElementById('bookingModal').classList.add('active');
+        }
+
+        function closeBookingModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+            selectedEvent = null;
+        }
+
+        document.getElementById('guestCount').addEventListener('input', updateTotalAmount);
+
+        function updateTotalAmount() {
+            if (selectedEvent) {
+                const guests = parseInt(document.getElementById('guestCount').value) || 1;
+                const total = selectedEvent.price * guests;
+                document.getElementById('totalAmount').textContent = '₹' + total.toLocaleString();
+            }
+        }
+
+        function confirmBooking() {
+            const guests = parseInt(document.getElementById('guestCount').value) || 1;
+            const totalAmount = selectedEvent.price * guests;
+            
+            const bookings = db.get('clubBookings');
+            bookings.push({
+                id: Date.now().toString(),
+                userId: currentUser.id,
+                eventId: selectedEvent.id,
+                guests,
+                totalAmount,
+                bookingDate: new Date().toISOString()
+            });
+            db.set('clubBookings', bookings);
+            
+            // Update event booked count
+            const events = db.get('clubEvents');
+            const eventIndex = events.findIndex(e => e.id === selectedEvent.id);
+            if (eventIndex !== -1) {
+                events[eventIndex].booked = (events[eventIndex].booked || 0) + guests;
+                db.set('clubEvents', events);
+            }
+            
+            closeBookingModal();
+            alert('🎉 Booking confirmed! Check your bookings page.');
+            loadDashboard();
+        }
+
+        function showPage(page) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            event.target.closest('.nav-item').classList.add('active');
+            
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.getElementById(page + 'Page').classList.add('active');
+        }
+
         // Check maintenance mode periodically
-        setInterval(checkMaintenanceMode, 3000);
+        setInterval(() => {
+            if (checkMaintenanceMode() && currentUser) {
+                logout();
+            }
+        }, 3000);
     </script>
 </body>
 </html>
