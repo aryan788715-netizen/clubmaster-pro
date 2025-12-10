@@ -7,7 +7,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background: #f8fafc; }
+        
+        :root {
+            --primary: #8b5cf6;
+            --secondary: #ec4899;
+            --bg-light: #f8fafc;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: var(--bg-light);
+            color: var(--text-dark);
+        }
+
+        /* Dynamic Theme Variables */
+        body.custom-theme {
+            --primary: var(--custom-primary, #8b5cf6);
+            --secondary: var(--custom-secondary, #ec4899);
+        }
 
         /* Maintenance Screen */
         .maintenance-screen {
@@ -17,7 +36,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             z-index: 10000;
             align-items: center;
             justify-content: center;
@@ -32,15 +51,15 @@
         .maintenance-title { font-size: 48px; font-weight: 900; margin-bottom: 20px; }
         .maintenance-message { font-size: 20px; max-width: 600px; opacity: 0.9; line-height: 1.6; }
 
-        /* Login */
-        .login-page {
+        /* Login/Signup */
+        .auth-page {
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
         }
-        .login-card {
+        .auth-card {
             background: white;
             padding: 50px;
             border-radius: 24px;
@@ -51,7 +70,7 @@
         .logo {
             width: 90px;
             height: 90px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 22px;
             display: flex;
             align-items: center;
@@ -59,16 +78,16 @@
             font-size: 42px;
             margin: 0 auto 28px;
         }
-        .login-title {
+        .auth-title {
             font-size: 34px;
             font-weight: 900;
             text-align: center;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .login-subtitle { text-align: center; color: #64748b; margin-bottom: 36px; font-size: 16px; }
+        .auth-subtitle { text-align: center; color: var(--text-light); margin-bottom: 36px; font-size: 16px; }
         .form-group { margin-bottom: 24px; }
         .form-label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 14px; }
         .form-input {
@@ -79,7 +98,7 @@
             font-size: 15px;
             transition: all 0.3s;
         }
-        .form-input:focus { outline: none; border-color: #8b5cf6; box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
+        .form-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1); }
         .btn {
             width: 100%;
             padding: 16px;
@@ -88,17 +107,23 @@
             font-size: 16px;
             font-weight: 700;
             cursor: pointer;
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             transition: all 0.3s;
         }
         .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(139, 92, 246, 0.3); }
-        .demo-accounts {
-            margin-top: 28px;
-            padding: 20px;
-            background: #f8fafc;
-            border-radius: 14px;
-            font-size: 13px;
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .btn-secondary { background: #64748b; }
+        .switch-auth {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-light);
+        }
+        .switch-auth a {
+            color: var(--primary);
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
         }
         .alert {
             padding: 18px 24px;
@@ -112,13 +137,35 @@
         .alert-success { background: rgba(16, 185, 129, 0.1); color: #10b981; border-left: 4px solid #10b981; }
         .alert-error { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-left: 4px solid #ef4444; }
         .alert-warning { background: rgba(245, 158, 11, 0.1); color: #f59e0b; border-left: 4px solid #f59e0b; }
+        .alert-info { background: rgba(59, 130, 246, 0.1); color: #3b82f6; border-left: 4px solid #3b82f6; }
+
+        .otp-inputs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 24px 0;
+        }
+        .otp-input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: 700;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+        }
+        .otp-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+        }
 
         /* Dashboard */
         .dashboard { display: none; min-height: 100vh; }
         .dashboard.active { display: block; }
         
         .topbar {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             padding: 40px;
             color: white;
             text-align: center;
@@ -144,8 +191,8 @@
         }
         .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
         .stat-icon { font-size: 50px; margin-bottom: 15px; }
-        .stat-label { font-size: 14px; color: #64748b; font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
-        .stat-value { font-size: 32px; font-weight: 900; color: #1e293b; }
+        .stat-label { font-size: 14px; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 8px; }
+        .stat-value { font-size: 32px; font-weight: 900; color: var(--text-dark); }
 
         .events-grid {
             display: grid;
@@ -162,31 +209,31 @@
         }
         .event-card:hover { transform: translateY(-8px); box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
         .event-header {
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             padding: 40px 30px;
             text-align: center;
         }
         .event-icon { font-size: 70px; }
         .event-body { padding: 30px; }
-        .event-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; color: #1e293b; }
-        .event-desc { color: #64748b; margin-bottom: 20px; line-height: 1.6; }
+        .event-title { font-size: 22px; font-weight: 800; margin-bottom: 12px; color: var(--text-dark); }
+        .event-desc { color: var(--text-light); margin-bottom: 20px; line-height: 1.6; }
         .event-info { display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
-        .event-info-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #64748b; }
+        .event-info-item { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--text-light); }
         .event-info-icon { font-size: 18px; }
-        .event-price { font-size: 28px; font-weight: 900; color: #8b5cf6; margin-bottom: 15px; }
+        .event-price { font-size: 28px; font-weight: 900; color: var(--primary); margin-bottom: 15px; }
         .event-capacity { 
             background: rgba(139, 92, 246, 0.1); 
             padding: 10px; 
             border-radius: 10px; 
             text-align: center; 
             font-weight: 700; 
-            color: #8b5cf6;
+            color: var(--primary);
             margin-bottom: 20px;
         }
         .btn-book {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             color: white;
             border: none;
             border-radius: 12px;
@@ -217,12 +264,12 @@
             gap: 5px;
             padding: 10px 20px;
             cursor: pointer;
-            color: #64748b;
+            color: var(--text-light);
             transition: all 0.3s;
             border-radius: 12px;
         }
-        .nav-item.active { color: #8b5cf6; background: rgba(139, 92, 246, 0.1); }
-        .nav-item:hover { color: #8b5cf6; }
+        .nav-item.active { color: var(--primary); background: rgba(139, 92, 246, 0.1); }
+        .nav-item:hover { color: var(--primary); }
         .nav-icon { font-size: 24px; }
         .nav-label { font-size: 12px; font-weight: 600; }
 
@@ -236,24 +283,24 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
             margin-bottom: 24px;
         }
-        .card-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; color: #1e293b; }
+        .card-title { font-size: 24px; font-weight: 800; margin-bottom: 20px; color: var(--text-dark); }
 
         .booking-item {
             background: #f8fafc;
             padding: 20px;
             border-radius: 14px;
             margin-bottom: 15px;
-            border-left: 4px solid #8b5cf6;
+            border-left: 4px solid var(--primary);
         }
-        .booking-id { font-size: 12px; color: #64748b; font-weight: 700; margin-bottom: 8px; }
-        .booking-event { font-size: 18px; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
-        .booking-details { font-size: 14px; color: #64748b; margin-bottom: 8px; }
-        .booking-amount { font-size: 20px; font-weight: 900; color: #8b5cf6; }
+        .booking-id { font-size: 12px; color: var(--text-light); font-weight: 700; margin-bottom: 8px; }
+        .booking-event { font-size: 18px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; }
+        .booking-details { font-size: 14px; color: var(--text-light); margin-bottom: 8px; }
+        .booking-amount { font-size: 20px; font-weight: 900; color: var(--primary); }
 
         .profile-avatar {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -270,14 +317,14 @@
             margin-bottom: 15px;
             border-left: 4px solid #3b82f6;
         }
-        .notif-title { font-size: 16px; font-weight: 800; color: #1e293b; margin-bottom: 8px; }
-        .notif-message { font-size: 14px; color: #64748b; margin-bottom: 8px; }
+        .notif-title { font-size: 16px; font-weight: 800; color: var(--text-dark); margin-bottom: 8px; }
+        .notif-message { font-size: 14px; color: var(--text-light); margin-bottom: 8px; }
         .notif-date { font-size: 12px; color: #94a3b8; }
 
         .empty-state {
             text-align: center;
             padding: 80px 20px;
-            color: #64748b;
+            color: var(--text-light);
         }
         .empty-icon { font-size: 80px; margin-bottom: 20px; opacity: 0.5; }
         .empty-title { font-size: 22px; font-weight: 800; margin-bottom: 10px; }
@@ -315,7 +362,6 @@
             margin-top: 24px;
         }
         .modal-footer .btn { flex: 1; }
-        .btn-secondary { background: #64748b; }
     </style>
 </head>
 <body>
@@ -326,28 +372,64 @@
         <p class="maintenance-message" id="maintenanceMessage">We're currently performing scheduled maintenance. We'll be back soon!</p>
     </div>
 
-    <!-- Login Page -->
-    <div id="loginPage" class="login-page">
-        <div class="login-card">
-            <div class="logo">🎉</div>
-            <h1 class="login-title">ClubMaster Pro</h1>
-            <p class="login-subtitle">Welcome Back!</p>
-            <div id="loginAlert"></div>
-            <form id="loginForm">
+    <!-- Auth Page -->
+    <div id="authPage" class="auth-page">
+        <div class="auth-card">
+            <div class="logo" id="authLogo">🎉</div>
+            <h1 class="auth-title" id="clubName">ClubMaster Pro</h1>
+            <p class="auth-subtitle" id="clubDesc">Welcome Back!</p>
+            <div id="authAlert"></div>
+
+            <!-- Login Form -->
+            <div id="loginForm">
+                <div class="form-group">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" id="loginPhone" placeholder="+91 9876543210" required>
+                </div>
+                <button class="btn" onclick="sendLoginOTP()">Send OTP</button>
+                <div class="switch-auth">
+                    Don't have an account? <a onclick="showSignup()">Sign Up</a>
+                </div>
+            </div>
+
+            <!-- Signup Form -->
+            <div id="signupForm" style="display: none;">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="signupName" placeholder="John Doe" required>
+                </div>
                 <div class="form-group">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-input" id="loginEmail" required placeholder="Enter your email">
+                    <input type="email" class="form-input" id="signupEmail" placeholder="john@example.com" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Password</label>
-                    <input type="password" class="form-input" id="loginPassword" required placeholder="Enter your password">
+                    <label class="form-label">Phone Number</label>
+                    <input type="tel" class="form-input" id="signupPhone" placeholder="+91 9876543210" required>
                 </div>
-                <button type="submit" class="btn">Sign In</button>
-            </form>
-            <div class="demo-accounts">
-                <strong>Demo Account:</strong><br>
-                Email: user@club.com<br>
-                Password: user123
+                <button class="btn" onclick="sendSignupOTP()">Send OTP</button>
+                <div class="switch-auth">
+                    Already have an account? <a onclick="showLogin()">Login</a>
+                </div>
+            </div>
+
+            <!-- OTP Verification -->
+            <div id="otpForm" style="display: none;">
+                <p style="text-align: center; margin-bottom: 20px; color: var(--text-light);">
+                    Enter the 6-digit OTP sent to <strong id="otpPhone"></strong>
+                </p>
+                <div class="otp-inputs">
+                    <input type="text" class="otp-input" maxlength="1" id="otp1" oninput="moveToNext(this, 'otp2')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp2" oninput="moveToNext(this, 'otp3')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp3" oninput="moveToNext(this, 'otp4')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp4" oninput="moveToNext(this, 'otp5')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp5" oninput="moveToNext(this, 'otp6')">
+                    <input type="text" class="otp-input" maxlength="1" id="otp6">
+                </div>
+                <button class="btn" onclick="verifyOTP()">Verify OTP</button>
+                <button class="btn btn-secondary" onclick="backToAuth()" style="margin-top: 10px;">Back</button>
+                <div class="switch-auth">
+                    Didn't receive OTP? <a onclick="resendOTP()">Resend</a>
+                </div>
             </div>
         </div>
     </div>
@@ -355,8 +437,8 @@
     <!-- Dashboard -->
     <div id="dashboard" class="dashboard">
         <div class="topbar">
-            <h1>🎉 ClubMaster Pro</h1>
-            <p>Your Premium Event Experience</p>
+            <h1 id="dashboardClubName">🎉 ClubMaster Pro</h1>
+            <p id="dashboardClubDesc">Your Premium Event Experience</p>
         </div>
 
         <div class="container">
@@ -380,7 +462,7 @@
                     </div>
                 </div>
 
-                <h2 style="font-size: 28px; font-weight: 900; margin-bottom: 24px; color: #1e293b;">🔥 Upcoming Events</h2>
+                <h2 style="font-size: 28px; font-weight: 900; margin-bottom: 24px; color: var(--text-dark);">🔥 Upcoming Events</h2>
                 <div class="events-grid" id="eventsGrid"></div>
             </div>
 
@@ -404,11 +486,11 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-input" id="profileEmail" disabled>
+                            <input type="email" class="form-input" id="profileEmail">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Phone</label>
-                            <input type="tel" class="form-input" id="profilePhone">
+                            <input type="tel" class="form-input" id="profilePhone" disabled>
                         </div>
                         <button type="submit" class="btn">Save Changes</button>
                     </form>
@@ -455,12 +537,12 @@
                 <label class="form-label">Number of Guests</label>
                 <input type="number" class="form-input" id="guestCount" min="1" value="1">
             </div>
-            <div style="font-size: 24px; font-weight: 900; color: #8b5cf6; margin: 20px 0;">
+            <div style="font-size: 24px; font-weight: 900; color: var(--primary); margin: 20px 0;">
                 Total: <span id="totalAmount">₹0</span>
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="closeBookingModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="confirmBooking()">Confirm Booking</button>
+                <button class="btn" onclick="confirmBooking()">Confirm Booking</button>
             </div>
         </div>
     </div>
@@ -469,11 +551,45 @@
         const db = {
             get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
             set: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
-            getObj: (key) => JSON.parse(localStorage.getItem(key) || '{}')
+            getObj: (key) => JSON.parse(localStorage.getItem(key) || '{}'),
+            setObj: (key, val) => localStorage.setItem(key, JSON.stringify(val))
         };
 
         let currentUser = null;
         let selectedEvent = null;
+        let otpData = null;
+        let isSignup = false;
+
+        // Generate device ID
+        function getDeviceId() {
+            let deviceId = localStorage.getItem('deviceId');
+            if (!deviceId) {
+                deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                localStorage.setItem('deviceId', deviceId);
+            }
+            return deviceId;
+        }
+
+        // Apply custom theme
+        function applyTheme() {
+            const settings = db.getObj('clubSettings');
+            if (settings.primaryColor) {
+                document.documentElement.style.setProperty('--custom-primary', settings.primaryColor);
+                document.documentElement.style.setProperty('--primary', settings.primaryColor);
+            }
+            if (settings.secondaryColor) {
+                document.documentElement.style.setProperty('--custom-secondary', settings.secondaryColor);
+                document.documentElement.style.setProperty('--secondary', settings.secondaryColor);
+            }
+            if (settings.clubName) {
+                document.getElementById('clubName').textContent = settings.clubName;
+                document.getElementById('dashboardClubName').textContent = '🎉 ' + settings.clubName;
+            }
+            if (settings.clubDescription) {
+                document.getElementById('clubDesc').textContent = settings.clubDescription;
+                document.getElementById('dashboardClubDesc').textContent = settings.clubDescription;
+            }
+        }
 
         // Check maintenance mode
         function checkMaintenanceMode() {
@@ -481,7 +597,7 @@
             if (settings.maintenanceMode) {
                 document.getElementById('maintenanceMessage').textContent = settings.maintenanceMessage || "We're currently performing scheduled maintenance. We'll be back soon!";
                 document.getElementById('maintenanceScreen').classList.add('active');
-                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('authPage').style.display = 'none';
                 document.getElementById('dashboard').classList.remove('active');
                 return true;
             } else {
@@ -490,53 +606,202 @@
             }
         }
 
+        // Check if user is already logged in
+        function checkAutoLogin() {
+            const deviceId = getDeviceId();
+            const sessions = db.get('userSessions');
+            const session = sessions.find(s => s.deviceId === deviceId && s.active);
+            
+            if (session) {
+                const users = db.get('clubUsers');
+                currentUser = users.find(u => u.id === session.userId);
+                
+                if (currentUser) {
+                    document.getElementById('authPage').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    loadDashboard();
+                    return true;
+                }
+            }
+            return false;
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
-            checkMaintenanceMode();
+            applyTheme();
+            if (!checkMaintenanceMode()) {
+                checkAutoLogin();
+            }
         });
 
-        // Login
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            if (checkMaintenanceMode()) {
-                document.getElementById('loginAlert').innerHTML = '<div class="alert alert-warning">⚠️ System is under maintenance. Please try again later.</div>';
+        // Auth functions
+        function showSignup() {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('signupForm').style.display = 'block';
+            document.getElementById('otpForm').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('loginForm').style.display = 'block';
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('otpForm').style.display = 'none';
+        }
+
+        function sendLoginOTP() {
+            const phone = document.getElementById('loginPhone').value;
+            if (!phone) {
+                showAlert('Please enter phone number', 'error');
                 return;
             }
 
-            const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPassword').value;
+            const users = db.get('clubUsers');
+            const user = users.find(u => u.phone === phone);
             
-            if (email === 'user@club.com' && pass === 'user123') {
-                currentUser = { id: '1', email, name: 'Demo User', phone: '+91 9876543210' };
-                
-                // Initialize user if not exists
-                let users = db.get('clubUsers');
-                if (!users.find(u => u.email === email)) {
-                    users.push(currentUser);
-                    db.set('clubUsers', users);
-                }
-                
-                document.getElementById('loginAlert').innerHTML = '<div class="alert alert-success">✓ Login successful!</div>';
-                setTimeout(() => {
-                    document.getElementById('loginPage').style.display = 'none';
-                    document.getElementById('dashboard').classList.add('active');
-                    loadDashboard();
-                }, 500);
-            } else {
-                document.getElementById('loginAlert').innerHTML = '<div class="alert alert-error">✗ Invalid credentials</div>';
+            if (!user) {
+                showAlert('Phone number not registered. Please sign up first.', 'error');
+                return;
             }
-        });
+
+            isSignup = false;
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            otpData = { phone, otp, userId: user.id };
+            
+            console.log('Login OTP:', otp); // In production, send via SMS
+            showAlert('OTP sent to ' + phone + ' (Check console: ' + otp + ')', 'success');
+            
+            document.getElementById('otpPhone').textContent = phone;
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('otpForm').style.display = 'block';
+        }
+
+        function sendSignupOTP() {
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const phone = document.getElementById('signupPhone').value;
+
+            if (!name || !email || !phone) {
+                showAlert('Please fill all fields', 'error');
+                return;
+            }
+
+            const users = db.get('clubUsers');
+            if (users.find(u => u.phone === phone)) {
+                showAlert('Phone number already registered', 'error');
+                return;
+            }
+
+            isSignup = true;
+            const otp = Math.floor(100000 + Math.random() * 900000).toString();
+            otpData = { phone, otp, name, email };
+            
+            console.log('Signup OTP:', otp); // In production, send via SMS
+            showAlert('OTP sent to ' + phone + ' (Check console: ' + otp + ')', 'success');
+            
+            document.getElementById('otpPhone').textContent = phone;
+            document.getElementById('signupForm').style.display = 'none';
+            document.getElementById('otpForm').style.display = 'block';
+        }
+
+        function verifyOTP() {
+            const enteredOTP = ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6']
+                .map(id => document.getElementById(id).value)
+                .join('');
+
+            if (enteredOTP.length !== 6) {
+                showAlert('Please enter complete OTP', 'error');
+                return;
+            }
+
+            if (enteredOTP !== otpData.otp) {
+                showAlert('Invalid OTP', 'error');
+                return;
+            }
+
+            if (isSignup) {
+                // Create new user
+                const users = db.get('clubUsers');
+                currentUser = {
+                    id: Date.now().toString(),
+                    name: otpData.name,
+                    email: otpData.email,
+                    phone: otpData.phone
+                };
+                users.push(currentUser);
+                db.set('clubUsers', users);
+            } else {
+                // Login existing user
+                const users = db.get('clubUsers');
+                currentUser = users.find(u => u.id === otpData.userId);
+            }
+
+            // Create session
+            const sessions = db.get('userSessions');
+            sessions.push({
+                id: Date.now().toString(),
+                userId: currentUser.id,
+                deviceId: getDeviceId(),
+                active: true,
+                createdAt: new Date().toISOString()
+            });
+            db.set('userSessions', sessions);
+
+            showAlert('Login successful!', 'success');
+            setTimeout(() => {
+                document.getElementById('authPage').style.display = 'none';
+                document.getElementById('dashboard').classList.add('active');
+                loadDashboard();
+            }, 500);
+        }
+
+        function resendOTP() {
+            if (isSignup) {
+                sendSignupOTP();
+            } else {
+                sendLoginOTP();
+            }
+        }
+
+        function backToAuth() {
+            if (isSignup) {
+                showSignup();
+            } else {
+                showLogin();
+            }
+            ['otp1', 'otp2', 'otp3', 'otp4', 'otp5', 'otp6'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+
+        function moveToNext(current, nextId) {
+            if (current.value.length === 1 && nextId) {
+                document.getElementById(nextId).focus();
+            }
+        }
+
+        function showAlert(message, type) {
+            const alertDiv = document.getElementById('authAlert');
+            alertDiv.innerHTML = `<div class="alert alert-${type}">${message}</div>`;
+            setTimeout(() => alertDiv.innerHTML = '', 5000);
+        }
 
         function logout() {
+            const deviceId = getDeviceId();
+            const sessions = db.get('userSessions');
+            const updatedSessions = sessions.map(s => {
+                if (s.deviceId === deviceId) {
+                    s.active = false;
+                }
+                return s;
+            });
+            db.set('userSessions', updatedSessions);
+
             currentUser = null;
             document.getElementById('dashboard').classList.remove('active');
-            document.getElementById('loginPage').style.display = 'flex';
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-            document.getElementById('loginAlert').innerHTML = '';
+            document.getElementById('authPage').style.display = 'flex';
+            showLogin();
         }
 
         function loadDashboard() {
+            applyTheme();
             const events = db.get('clubEvents');
             const bookings = db.get('clubBookings');
             const userBookings = bookings.filter(b => b.userId === currentUser.id);
@@ -588,7 +853,7 @@
                                     <span>${e.venue}</span>
                                 </div>
                             </div>
-                            <div class="event-price">₹${e.price.toLocaleString()} <span style="font-size: 14px; color: #64748b;">per person</span></div>
+                            <div class="event-price">₹${e.price.toLocaleString()} <span style="font-size: 14px; color: var(--text-light);">per person</span></div>
                             <div class="event-capacity">
                                 ${isSoldOut ? '🔴 SOLD OUT' : `✅ ${available} spots left`}
                             </div>
@@ -645,15 +910,15 @@
 
         function loadProfile() {
             document.getElementById('profileName').value = currentUser.name;
-            document.getElementById('profileEmail').value = currentUser.email;
-            document.getElementById('profilePhone').value = currentUser.phone || '';
+            document.getElementById('profileEmail').value = currentUser.email || '';
+            document.getElementById('profilePhone').value = currentUser.phone;
             document.getElementById('profileAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
         }
 
         document.getElementById('profileForm').addEventListener('submit', (e) => {
             e.preventDefault();
             currentUser.name = document.getElementById('profileName').value;
-            currentUser.phone = document.getElementById('profilePhone').value;
+            currentUser.email = document.getElementById('profileEmail').value;
             
             let users = db.get('clubUsers');
             const index = users.findIndex(u => u.id === currentUser.id);
@@ -673,11 +938,11 @@
             document.getElementById('modalEventTitle').textContent = selectedEvent.title;
             document.getElementById('modalEventDetails').innerHTML = `
                 <div style="margin-bottom: 20px;">
-                    <div style="font-size: 16px; color: #64748b; margin-bottom: 10px;">
+                    <div style="font-size: 16px; color: var(--text-light); margin-bottom: 10px;">
                         📅 ${new Date(selectedEvent.date).toLocaleDateString()} • ⏰ ${selectedEvent.time}<br>
                         📍 ${selectedEvent.venue}
                     </div>
-                    <div style="font-size: 20px; font-weight: 700; color: #8b5cf6;">
+                    <div style="font-size: 20px; font-weight: 700; color: var(--primary);">
                         ₹${selectedEvent.price.toLocaleString()} per person
                     </div>
                 </div>
@@ -741,11 +1006,12 @@
             document.getElementById(page + 'Page').classList.add('active');
         }
 
-        // Check maintenance mode periodically
+        // Check maintenance mode and theme periodically
         setInterval(() => {
             if (checkMaintenanceMode() && currentUser) {
                 logout();
             }
+            applyTheme();
         }, 3000);
     </script>
 </body>
