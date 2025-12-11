@@ -160,7 +160,55 @@
             box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
         }
 
-        /* Dashboard */
+        .sms-provider-notice {
+            background: rgba(59, 130, 246, 0.1);
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #3b82f6;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .sms-provider-notice strong {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .setup-instructions {
+            background: #f8fafc;
+            padding: 24px;
+            border-radius: 14px;
+            margin-top: 20px;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .setup-instructions h4 {
+            font-size: 16px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .setup-instructions ol {
+            margin-left: 20px;
+        }
+
+        .setup-instructions li {
+            margin-bottom: 8px;
+        }
+
+        .setup-instructions code {
+            background: #e2e8f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #ef4444;
+        }
+
+        /* Dashboard styles remain the same as before */
         .dashboard { display: none; min-height: 100vh; }
         .dashboard.active { display: block; }
         
@@ -378,6 +426,12 @@
             <div class="logo" id="authLogo">🎉</div>
             <h1 class="auth-title" id="clubName">ClubMaster Pro</h1>
             <p class="auth-subtitle" id="clubDesc">Welcome Back!</p>
+            
+            <div class="sms-provider-notice">
+                <strong>📱 SMS OTP Configuration Required</strong>
+                To enable real SMS OTP, you need to configure an SMS provider. This demo uses simulated OTP (check browser console).
+            </div>
+
             <div id="authAlert"></div>
 
             <!-- Login Form -->
@@ -386,7 +440,7 @@
                     <label class="form-label">Phone Number</label>
                     <input type="tel" class="form-input" id="loginPhone" placeholder="+91 9876543210" required>
                 </div>
-                <button class="btn" onclick="sendLoginOTP()">Send OTP</button>
+                <button class="btn" onclick="sendLoginOTP()">Send OTP via SMS</button>
                 <div class="switch-auth">
                     Don't have an account? <a onclick="showSignup()">Sign Up</a>
                 </div>
@@ -406,7 +460,7 @@
                     <label class="form-label">Phone Number</label>
                     <input type="tel" class="form-input" id="signupPhone" placeholder="+91 9876543210" required>
                 </div>
-                <button class="btn" onclick="sendSignupOTP()">Send OTP</button>
+                <button class="btn" onclick="sendSignupOTP()">Send OTP via SMS</button>
                 <div class="switch-auth">
                     Already have an account? <a onclick="showLogin()">Login</a>
                 </div>
@@ -415,7 +469,7 @@
             <!-- OTP Verification -->
             <div id="otpForm" style="display: none;">
                 <p style="text-align: center; margin-bottom: 20px; color: var(--text-light);">
-                    Enter the 6-digit OTP sent to <strong id="otpPhone"></strong>
+                    📱 Enter the 6-digit OTP sent to <strong id="otpPhone"></strong>
                 </p>
                 <div class="otp-inputs">
                     <input type="text" class="otp-input" maxlength="1" id="otp1" oninput="moveToNext(this, 'otp2')">
@@ -428,13 +482,26 @@
                 <button class="btn" onclick="verifyOTP()">Verify OTP</button>
                 <button class="btn btn-secondary" onclick="backToAuth()" style="margin-top: 10px;">Back</button>
                 <div class="switch-auth">
-                    Didn't receive OTP? <a onclick="resendOTP()">Resend</a>
+                    Didn't receive OTP? <a onclick="resendOTP()">Resend SMS</a>
                 </div>
+            </div>
+
+            <!-- Setup Instructions -->
+            <div class="setup-instructions">
+                <h4>🔧 How to Enable Real SMS OTP:</h4>
+                <ol>
+                    <li>Sign up for <strong>Twilio</strong> (twilio.com) or <strong>MSG91</strong> (msg91.com)</li>
+                    <li>Get your API credentials (Account SID, Auth Token, Phone Number)</li>
+                    <li>Create a backend API endpoint (Node.js/Python/PHP)</li>
+                    <li>Update <code>SMS_API_ENDPOINT</code> in the code</li>
+                    <li>Deploy your backend to Vercel/Netlify/Railway</li>
+                </ol>
+                <p style="margin-top: 12px;"><strong>For now:</strong> OTP is shown in browser console (F12)</p>
             </div>
         </div>
     </div>
 
-    <!-- Dashboard -->
+    <!-- Dashboard (same as before) -->
     <div id="dashboard" class="dashboard">
         <div class="topbar">
             <h1 id="dashboardClubName">🎉 ClubMaster Pro</h1>
@@ -442,7 +509,6 @@
         </div>
 
         <div class="container">
-            <!-- Home Page -->
             <div id="homePage" class="page active">
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -466,7 +532,6 @@
                 <div class="events-grid" id="eventsGrid"></div>
             </div>
 
-            <!-- Bookings Page -->
             <div id="bookingsPage" class="page">
                 <div class="card">
                     <h2 class="card-title">📅 My Bookings</h2>
@@ -474,7 +539,6 @@
                 </div>
             </div>
 
-            <!-- Profile Page -->
             <div id="profilePage" class="page">
                 <div class="card">
                     <h2 class="card-title">👤 My Profile</h2>
@@ -498,7 +562,6 @@
                 </div>
             </div>
 
-            <!-- Notifications Page -->
             <div id="notificationsPage" class="page">
                 <div class="card">
                     <h2 class="card-title">🔔 Notifications</h2>
@@ -507,7 +570,6 @@
             </div>
         </div>
 
-        <!-- Bottom Navigation -->
         <div class="bottom-nav">
             <div class="nav-item active" onclick="showPage('home')">
                 <div class="nav-icon">🏠</div>
@@ -528,7 +590,6 @@
         </div>
     </div>
 
-    <!-- Booking Modal -->
     <div id="bookingModal" class="modal">
         <div class="modal-content">
             <h3 class="modal-title" id="modalEventTitle">Book Event</h3>
@@ -548,6 +609,16 @@
     </div>
 
     <script>
+        // SMS API Configuration
+        const SMS_CONFIG = {
+            // Replace with your actual SMS API endpoint
+            endpoint: 'YOUR_BACKEND_API_ENDPOINT/send-otp',
+            // For Twilio: https://api.twilio.com/2010-04-01/Accounts/{AccountSid}/Messages.json
+            // For MSG91: https://api.msg91.com/api/v5/otp
+            // For Fast2SMS: https://www.fast2sms.com/dev/bulkV2
+            provider: 'demo' // 'twilio', 'msg91', 'fast2sms', or 'demo'
+        };
+
         const db = {
             get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
             set: (key, val) => localStorage.setItem(key, JSON.stringify(val)),
@@ -560,7 +631,6 @@
         let otpData = null;
         let isSignup = false;
 
-        // Generate device ID
         function getDeviceId() {
             let deviceId = localStorage.getItem('deviceId');
             if (!deviceId) {
@@ -570,7 +640,6 @@
             return deviceId;
         }
 
-        // Apply custom theme
         function applyTheme() {
             const settings = db.getObj('clubSettings');
             if (settings.primaryColor) {
@@ -591,7 +660,6 @@
             }
         }
 
-        // Check maintenance mode
         function checkMaintenanceMode() {
             const settings = db.getObj('clubSettings');
             if (settings.maintenanceMode) {
@@ -606,7 +674,6 @@
             }
         }
 
-        // Check if user is already logged in
         function checkAutoLogin() {
             const deviceId = getDeviceId();
             const sessions = db.get('userSessions');
@@ -633,7 +700,47 @@
             }
         });
 
-        // Auth functions
+        // SMS OTP Functions
+        async function sendSMSOTP(phone, otp) {
+            if (SMS_CONFIG.provider === 'demo') {
+                // Demo mode - show OTP in console
+                console.log('═══════════════════════════════════');
+                console.log('📱 SMS OTP (DEMO MODE)');
+                console.log('Phone:', phone);
+                console.log('OTP:', otp);
+                console.log('═══════════════════════════════════');
+                showAlert(`📱 OTP sent to ${phone}. Check console (F12) for OTP: ${otp}`, 'success');
+                return true;
+            }
+
+            try {
+                // Real SMS API call
+                const response = await fetch(SMS_CONFIG.endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        phone: phone,
+                        otp: otp,
+                        message: `Your ClubMaster Pro OTP is: ${otp}. Valid for 5 minutes.`
+                    })
+                });
+
+                if (response.ok) {
+                    showAlert(`📱 OTP sent to ${phone}`, 'success');
+                    return true;
+                } else {
+                    throw new Error('SMS sending failed');
+                }
+            } catch (error) {
+                console.error('SMS Error:', error);
+                showAlert('Failed to send SMS. Using demo mode. Check console.', 'error');
+                console.log('OTP:', otp);
+                return false;
+            }
+        }
+
         function showSignup() {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('signupForm').style.display = 'block';
@@ -646,7 +753,7 @@
             document.getElementById('otpForm').style.display = 'none';
         }
 
-        function sendLoginOTP() {
+        async function sendLoginOTP() {
             const phone = document.getElementById('loginPhone').value;
             if (!phone) {
                 showAlert('Please enter phone number', 'error');
@@ -665,15 +772,14 @@
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
             otpData = { phone, otp, userId: user.id };
             
-            console.log('Login OTP:', otp); // In production, send via SMS
-            showAlert('OTP sent to ' + phone + ' (Check console: ' + otp + ')', 'success');
+            await sendSMSOTP(phone, otp);
             
             document.getElementById('otpPhone').textContent = phone;
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('otpForm').style.display = 'block';
         }
 
-        function sendSignupOTP() {
+        async function sendSignupOTP() {
             const name = document.getElementById('signupName').value;
             const email = document.getElementById('signupEmail').value;
             const phone = document.getElementById('signupPhone').value;
@@ -693,8 +799,7 @@
             const otp = Math.floor(100000 + Math.random() * 900000).toString();
             otpData = { phone, otp, name, email };
             
-            console.log('Signup OTP:', otp); // In production, send via SMS
-            showAlert('OTP sent to ' + phone + ' (Check console: ' + otp + ')', 'success');
+            await sendSMSOTP(phone, otp);
             
             document.getElementById('otpPhone').textContent = phone;
             document.getElementById('signupForm').style.display = 'none';
@@ -712,12 +817,11 @@
             }
 
             if (enteredOTP !== otpData.otp) {
-                showAlert('Invalid OTP', 'error');
+                showAlert('Invalid OTP. Please try again.', 'error');
                 return;
             }
 
             if (isSignup) {
-                // Create new user
                 const users = db.get('clubUsers');
                 currentUser = {
                     id: Date.now().toString(),
@@ -728,12 +832,10 @@
                 users.push(currentUser);
                 db.set('clubUsers', users);
             } else {
-                // Login existing user
                 const users = db.get('clubUsers');
                 currentUser = users.find(u => u.id === otpData.userId);
             }
 
-            // Create session
             const sessions = db.get('userSessions');
             sessions.push({
                 id: Date.now().toString(),
@@ -744,7 +846,7 @@
             });
             db.set('userSessions', sessions);
 
-            showAlert('Login successful!', 'success');
+            showAlert('✅ OTP verified! Login successful.', 'success');
             setTimeout(() => {
                 document.getElementById('authPage').style.display = 'none';
                 document.getElementById('dashboard').classList.add('active');
@@ -752,11 +854,11 @@
             }, 500);
         }
 
-        function resendOTP() {
-            if (isSignup) {
-                sendSignupOTP();
-            } else {
-                sendLoginOTP();
+        async function resendOTP() {
+            if (otpData) {
+                const newOTP = Math.floor(100000 + Math.random() * 900000).toString();
+                otpData.otp = newOTP;
+                await sendSMSOTP(otpData.phone, newOTP);
             }
         }
 
@@ -985,7 +1087,6 @@
             });
             db.set('clubBookings', bookings);
             
-            // Update event booked count
             const events = db.get('clubEvents');
             const eventIndex = events.findIndex(e => e.id === selectedEvent.id);
             if (eventIndex !== -1) {
@@ -1006,7 +1107,6 @@
             document.getElementById(page + 'Page').classList.add('active');
         }
 
-        // Check maintenance mode and theme periodically
         setInterval(() => {
             if (checkMaintenanceMode() && currentUser) {
                 logout();
