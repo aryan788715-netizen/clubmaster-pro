@@ -144,19 +144,24 @@
         .auth-subtitle { text-align: center; color: var(--text-light); margin-bottom: 36px; font-size: 16px; }
         .form-group { margin-bottom: 24px; }
         .form-label { display: block; font-weight: 600; margin-bottom: 10px; font-size: 14px; }
-        .form-input {
+        .form-input, .form-textarea {
             width: 100%;
             padding: 14px 18px;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 15px;
             transition: all 0.3s;
+            font-family: inherit;
         }
-        .form-input:focus { 
+        .form-input:focus, .form-textarea:focus { 
             outline: none; 
             border-color: var(--primary); 
             box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
             transform: translateY(-2px);
+        }
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
         }
         .btn {
             width: 100%;
@@ -709,21 +714,6 @@
         }
         .modal-footer .btn { flex: 1; }
 
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-radius: 50%;
-            border-top-color: white;
-            animation: spin 1s ease-in-out infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Responsive */
         @media (max-width: 768px) {
             .topbar h1 { font-size: 36px; }
@@ -742,7 +732,7 @@
     </div>
 
     <!-- Auth Page -->
-    <div id="authPage" class="auth-page">
+    <div id="authPage" class="auth-page" style="display: none;">
         <div class="auth-card">
             <div class="logo" id="authLogo">🎉</div>
             <h1 class="auth-title" id="clubName">ClubMaster Pro</h1>
@@ -928,7 +918,7 @@
         // SMS API Configuration
         const SMS_CONFIG = {
             endpoint: 'YOUR_BACKEND_API_ENDPOINT/send-otp',
-            provider: 'demo' // Change to 'msg91' when backend is ready
+            provider: 'demo'
         };
 
         const db = {
@@ -942,6 +932,53 @@
         let selectedEvent = null;
         let otpData = null;
         let isSignup = false;
+
+        // Initialize with demo data if empty
+        function initializeDemoData() {
+            const events = db.get('clubEvents');
+            if (events.length === 0) {
+                // Add demo events
+                const demoEvents = [
+                    {
+                        id: '1',
+                        title: 'Summer Music Festival',
+                        description: 'Join us for an unforgettable night of live music and entertainment!',
+                        date: '2024-12-25',
+                        time: '7:00 PM',
+                        price: 1500,
+                        capacity: 100,
+                        venue: 'Grand Arena, Mumbai',
+                        image: '🎵',
+                        booked: 25
+                    },
+                    {
+                        id: '2',
+                        title: 'New Year Bash 2025',
+                        description: 'Ring in the new year with style! DJ, drinks, and dancing all night.',
+                        date: '2024-12-31',
+                        time: '9:00 PM',
+                        price: 2500,
+                        capacity: 200,
+                        venue: 'Skybar Lounge, Delhi',
+                        image: '🎊',
+                        booked: 150
+                    },
+                    {
+                        id: '3',
+                        title: 'Comedy Night Live',
+                        description: 'Laugh out loud with the best comedians in town!',
+                        date: '2024-12-20',
+                        time: '8:00 PM',
+                        price: 800,
+                        capacity: 80,
+                        venue: 'Comedy Club, Bangalore',
+                        image: '😂',
+                        booked: 45
+                    }
+                ];
+                db.set('clubEvents', demoEvents);
+            }
+        }
 
         function getDeviceId() {
             let deviceId = localStorage.getItem('deviceId');
@@ -1006,9 +1043,12 @@
         }
 
         window.addEventListener('DOMContentLoaded', () => {
+            initializeDemoData(); // Initialize demo data
             applyTheme();
             if (!checkMaintenanceMode()) {
-                checkAutoLogin();
+                if (!checkAutoLogin()) {
+                    document.getElementById('authPage').style.display = 'flex';
+                }
             }
         });
 
